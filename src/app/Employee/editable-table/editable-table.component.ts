@@ -6,6 +6,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { EmployeeTable } from 'src/app/Models/EmployeeTable';
 import { EmployeeService } from 'src/app/services/employee.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-editable-table',
@@ -18,6 +19,7 @@ export class EditableTableComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource<any>();
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  editableTableFormGroup: FormGroup;
   dataSchema: any;
   USER_INFO = [];
   USER_SCHEMA = {
@@ -28,8 +30,9 @@ export class EditableTableComponent implements OnInit, AfterViewInit {
     "edit": "edit",
     "select": "select"
   };
-  constructor(public dialog: MatDialog, private empService: EmployeeService) {
-
+  j=1;
+  constructor(public dialog: MatDialog, private empService: EmployeeService,private fb: FormBuilder) {
+    this.editableTableFormGroup = this.fb.group({});
 
   }
 
@@ -39,6 +42,15 @@ export class EditableTableComponent implements OnInit, AfterViewInit {
       console.log("result");
       console.log(result)
       this.dataSource.data = result;
+
+      result.map((x, i) => {
+        //this.CaseDetailsForm.addControl('spotstressname'+i, this.fb.control(x.stressname, Validators.required))
+          this.editableTableFormGroup.addControl('EmployeeName'+this.j,this.fb.control("",Validators.required));
+          this.editableTableFormGroup.addControl('Position'+this.j,this.fb.control("",Validators.required));
+          this.editableTableFormGroup.addControl('DOB'+this.j,this.fb.control("",Validators.required));
+          this.editableTableFormGroup.addControl('BloodGroup'+this.j,this.fb.control("",Validators.required));
+          this.j++;
+      })
 
 
     });
@@ -57,9 +69,13 @@ export class EditableTableComponent implements OnInit, AfterViewInit {
 
 
   addRow() {
-    const newRow = {id: Math.floor(Math.random() * 1000), "EmployeeName": "", "Position": "","BloodGroup":"", "DOB": "",  isEdit: true, selected: false}
-    //this.dataSource. = [newRow, ...this.dataSource];
-    console.log(this.dataSource);
+    const newRow = {id: this.j, "EmployeeName": "", "Position": "","BloodGroup":"", "DOB": "",  isEdit: true, selected: false}
+    this.editableTableFormGroup.addControl('EmployeeName'+this.j,this.fb.control("",Validators.required));
+    this.editableTableFormGroup.addControl('Position'+this.j,this.fb.control("",Validators.required));
+    this.editableTableFormGroup.addControl('DOB'+this.j,this.fb.control("",Validators.required));
+    this.editableTableFormGroup.addControl('BloodGroup'+this.j,this.fb.control("",Validators.required));
+    this.dataSource.data = [newRow].concat(this.dataSource.data);
+    //console.log(this.dataSource);
   }
 
   removeRow(employeeId) {
@@ -69,16 +85,25 @@ export class EditableTableComponent implements OnInit, AfterViewInit {
 
   removeSelectedRows() {
    // this.dataSource.data = this.dataSource.data.filter((u: any) => !u.selected);
-    this.dialog.open(CongirmDialogComponent).afterClosed().subscribe(confirm => {
-      if (confirm) {
-        this.dataSource.data = this.dataSource.data.filter((u: any) => !u.selected);
-      }
-    });
+    // this.dialog.open(CongirmDialogComponent).afterClosed().subscribe(confirm => {
+    //   if (confirm) {
+
+    //   }
+    // });
+    this.dataSource.data = this.dataSource.data.filter((u: any) => !u.selected);
   }
 
 
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
 
+  }
+
+  getControlName(col,lblName){
+    return col+""+lblName;
+  }
+
+  public checkError = (controlName: string, errorName: string) => {
+    return this.editableTableFormGroup.controls[controlName].hasError(errorName);
   }
 }
