@@ -1,0 +1,59 @@
+<div class="leftFilter">
+    <button mat-raised-button (click)="removeSelectedRows()">Remove Rows</button>
+    <!-- <button mat-raised-button (click)="addRow()">Add Row</button> -->
+</div>
+
+<mat-form-field appearance="standard" class="filterMat">
+    <mat-label>Filter employee records</mat-label>
+    <input matInput placeholder="Filter employee records" (keyup)="applyFilter($event.target.value)">
+</mat-form-field>
+<div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource">
+        <ng-container [matColumnDef]="col" *ngFor="let col of displayedColumns">
+            <th mat-header-cell *matHeaderCellDef>
+                <span *ngIf="col !== 'edit'">
+                  {{col}}
+                </span>
+            </th>
+            <td mat-cell *matCellDef="let element">
+                <div *ngIf="!element.isEdit">
+                    <ng-container *ngIf="col === 'select'">
+                        <mat-checkbox (change)="element.selected = $event.checked"></mat-checkbox>
+                    </ng-container>
+                    <div class="btn-edit" *ngIf="col === 'edit'; spanHeader">
+                        <button mat-raised-button (click)="removeRow(element.id)">Delete</button>
+                        <button mat-raised-button (click)="element.isEdit = !element.isEdit">Edit</button>
+                    </div>
+                    <span #spanHeader>
+                      <span *ngIf="col==='DOB'">
+                        {{element[col]  | date:'shortDate'}}
+                       </span>
+                    <span *ngIf="col!='DOB'"> {{element[col]}}</span>
+                    </span>
+                </div>
+                <div [ngSwitch]="dataSchema[col]" *ngIf="element.isEdit">
+                    <div *ngSwitchCase="'select'">
+                    </div>
+                    <div class="btn-edit" *ngSwitchCase="'edit'">
+                        <button mat-raised-button (click)="element.isEdit = !element.isEdit">Done</button>
+                    </div>
+                    <mat-form-field *ngSwitchCase="'date'" appearance="fill">
+                        <mat-label>Choose a date</mat-label>
+                        <input matInput [matDatepicker]="picker" [(ngModel)]="element[col]">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+
+                    <mat-form-field *ngSwitchDefault>
+                        <mat-label>{{col}}</mat-label>
+                        <input [type]="dataSchema[col]" matInput [(ngModel)]="element[col]">
+                    </mat-form-field>
+                </div>
+            </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <mat-paginator #paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of periodic elements">
+    </mat-paginator>
+</div>

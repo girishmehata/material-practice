@@ -1,0 +1,8 @@
+[
+    { "index": 1, "empName": "Ramesh", "position": "Sr.Developer", "bloodGroup": "B+", "address": "Pune" },
+    { "index": 2, "empName": "Suresh", "position": "Specalist", "bloodGroup": "A+", "address": "Delhi" },
+    { "index": 3, "empName": "Ramesh", "position": "Jr.Developer", "bloodGroup": "AB+", "address": "Banglore" },
+    { "index": 4, "empName": "kiran", "position": "Manager", "bloodGroup": "B+", "address": "Pune" },
+    { "index": 5, "empName": "Smita", "position": "Account", "bloodGroup": "A+", "address": "Nagpur" },
+    { "index": 6, "empName": "Ravi", "position": "Tester", "bloodGroup": "B+", "address": "Mumbai" }
+]

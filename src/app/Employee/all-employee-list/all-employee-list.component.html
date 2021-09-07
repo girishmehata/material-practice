@@ -1,0 +1,52 @@
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+    <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+
+    <!-- Position Column -->
+    <div>
+        <ng-container matColumnDef="index">
+            <th mat-header-cell *matHeaderCellDef> No. </th>
+            <td mat-cell *matCellDef="let element" id="{{element.index}}" #groupRef> {{element.index}} </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="EmployeeName">
+            <th mat-header-cell *matHeaderCellDef> Employee Name </th>
+            <td mat-cell *matCellDef="let element" id="{{element.index}}" #groupRef> {{element.empName}} </td>
+        </ng-container>
+
+        <!-- Weight Column -->
+        <ng-container matColumnDef="Position">
+            <th mat-header-cell *matHeaderCellDef> Position </th>
+            <td mat-cell *matCellDef="let element" id="{{element.index}}" #groupRef> {{element.position}} </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="Blood Group">
+            <th mat-header-cell *matHeaderCellDef> Blood Group </th>
+            <td mat-cell *matCellDef="let element" id="{{element.index}}" #groupRef> {{element.bloodGroup}} </td>
+        </ng-container>
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="Address">
+            <th mat-header-cell *matHeaderCellDef> Address </th>
+            <td mat-cell *matCellDef="let element " id="{{element.index}}" #groupRef> {{element.address}} </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="Edit">
+            <th mat-header-cell *matHeaderCellDef> Edit </th>
+            <td mat-cell *matCellDef="let element"> <button [matMenuTriggerFor]="menu" mat-icon-button aria-label="Example icon button with a vertical three dot icon">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item routerLink="/edit-employee/{{element.index}}">Edit</button>
+                    <button (click)="openDialogForDelete(element.index)" mat-menu-item>Delete?</button>
+                </mat-menu>
+            </td>
+        </ng-container>
+    </div>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
